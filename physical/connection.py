@@ -18,7 +18,7 @@ class Connection:
         device_b: Second endpoint device.
         medium: Label for the medium type (e.g. ``copper``, ``fiber``).
     """
-
+    
     device_a: Any
     device_b: Any
     medium: str = "ethernet"

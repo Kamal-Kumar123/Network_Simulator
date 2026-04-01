@@ -15,7 +15,7 @@ class EndDevice(Layer1Device):
     End devices originate and terminate frames but do not forward them.
     """
 
-    mac: str = ""
+    mac: str = ""  #SENDER MAC ADDRESS
     inbox: List[Frame] = field(default_factory=list)
 
     def __init__(self, name: str, mac: str) -> None:

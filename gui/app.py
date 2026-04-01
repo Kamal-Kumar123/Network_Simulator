@@ -20,7 +20,7 @@ from core.network_state import EventLog, NetworkState
 from gui.canvas import TopologyCanvas
 from gui.dialogs import AddDeviceDialog, ConnectDialog
 from gui.log_widget import EventLogWidget
-from gui.panels import ControlPanel, CRCDemoPanel, FlowControlPanel, StatsPanel
+from gui.panels import ControlPanel, FlowControlPanel, StatsPanel
 from simulator.engine import BROADCAST_RECEIVER, Simulator
 
 
@@ -36,7 +36,6 @@ class MainWindow(QMainWindow):
         self.control_panel = ControlPanel(self)
         self.flow_panel = FlowControlPanel(self)
         self.stats_panel = StatsPanel(self)
-        self.crc_panel = CRCDemoPanel(self)
         self.event_log = EventLogWidget(self)
 
         self._build_ui()
@@ -81,7 +80,6 @@ class MainWindow(QMainWindow):
         right.addWidget(self.control_panel)
         right.addWidget(self.flow_panel)
         right.addWidget(self.stats_panel)
-        right.addWidget(self.crc_panel)
         right.addWidget(self.event_log, stretch=1)
         main_layout.addLayout(right, stretch=2)
 
@@ -91,7 +89,6 @@ class MainWindow(QMainWindow):
         """Wire child widget signals to simulator methods."""
         self.control_panel.send_requested.connect(self._on_send_frame)
         self.flow_panel.flow_requested.connect(self._on_flow_control)
-        self.crc_panel.crc_demo_clicked.connect(self._on_crc_demo)
 
     def _refresh_device_lists(self) -> None:
         names = [
@@ -168,11 +165,6 @@ class MainWindow(QMainWindow):
             self.sim.run_go_back_n(frames, window, error_at)
         else:
             self.sim.run_selective_repeat(frames, window, error_at)
-
-    def _on_crc_demo(self) -> None:
-        """Run CRC demo using simulator logic (no datalink imports in GUI widgets)."""
-        text = self.sim.crc_demo_report(self.crc_panel.binary_input.text())
-        self.crc_panel.set_crc_result(text)
 
     def _on_sim_event(self, entry: EventLog) -> None:
         """Callback from NetworkState when new events are logged."""
